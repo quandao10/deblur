@@ -15,7 +15,6 @@ class DeblurNet(nn.Module):
         self.conv_mean_out = nn.Conv2d(channel, 3, kernel_size=7, padding=3)
         self.conv_var_out = nn.Conv2d(channel, 3, kernel_size=7, padding=3)
         self.sigmoid = nn.Sigmoid()
-        self.batchnorm = nn.BatchNorm2d(3)
 
     def forward(self, img, blur_kernel):
         x = self.conv_in(img)
@@ -23,11 +22,9 @@ class DeblurNet(nn.Module):
         x = self.decoder(enc_list, blur_list)
 
         mean = self.conv_mean_out(x)
-        mean = self.batchnorm(mean)
         mean = self.sigmoid(mean)
 
         var = self.conv_var_out(x)
-        var = self.batchnorm(var)
         var = self.sigmoid(var)
         return mean, var
 
